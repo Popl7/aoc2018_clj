@@ -20,17 +20,32 @@
    (reduce +)))
 
 (def numbers2
-  [1 -2 3 1 1 -2])
+  ;[1 -2 3 1 1 -2]
+  [1 -1]
+  ;[3 3 4 -2 -4]
+  ;[-6 3 8 5 -6]
+  ;[7 7 -2 -7 -4]
+)
 
 ;; day1.2
 (defn part2 []
-  (loop [vals (cycle numbers2) prev [0]]
-    (let [val (first vals)
-          ;;_ (println "val" val)
-          new_val (+ (last prev) (or val 0))
-          ;;_ (println "nxt" new_val)
-          double (some #(= % new_val) prev)]
-      ;;(println "here " vals prev double new_val)
-      (if (or (not val) double)
-        new_val
-        (recur (rest vals) (conj prev new_val))))))
+  (println "xxxxxxxxxxxxxxxx start xxxxxxxxxxxxxxxx with " (count numbers) " numbers")
+  (let [number-loop (cycle numbers)]
+    (loop [vals number-loop, previous 0, history [0]]
+      (let [next_val (first vals)
+            new_val (if next_val
+                      (+ previous next_val)
+                      previous)
+            new_history (conj history new_val)
+            duplicate (some #(= % new_val) history)
+            ;; duplicate (> (count new_history) (count (set new_history)))
+            ]
+        ;;(println " => previous " previous " + " next_val " = " new_val " duplicate " duplicate)
+        (if (not next_val)
+          (println "NOT FOUND!")
+          (if duplicate
+            (do
+              (println "FOUND " new_val)
+              new_val)
+            (recur (rest vals) new_val new_history)))))))
+;>part2)
