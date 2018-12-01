@@ -31,16 +31,13 @@
 (defn part2 []
   (println "xxxxxxxxxxxxxxxx start xxxxxxxxxxxxxxxx with " (count numbers) " numbers")
   (let [number-loop (cycle numbers)]
-    (loop [vals number-loop, previous 0, history [0]]
+    (loop [vals number-loop, previous 0, history (hash-set 0)]
       (let [next_val (first vals)
             new_val (if next_val
                       (+ previous next_val)
                       previous)
             new_history (conj history new_val)
-            duplicate (some #(= % new_val) history)
-            ;; duplicate (> (count new_history) (count (set new_history)))
-            ]
-        ;;(println " => previous " previous " + " next_val " = " new_val " duplicate " duplicate)
+            duplicate (contains? history new_val)]
         (if (not next_val)
           (println "NOT FOUND!")
           (if duplicate
@@ -48,4 +45,3 @@
               (println "FOUND " new_val)
               new_val)
             (recur (rest vals) new_val new_history)))))))
-;>part2)
